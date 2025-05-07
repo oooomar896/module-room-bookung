@@ -1,0 +1,46 @@
+<odoo>
+    <!-- Calendar View -->
+    <record id="view_calendar_room_booking" model="ir.ui.view">
+        <field name="name">room.booking.calendar</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <calendar string="Room Booking Calendar"
+                      date_start="start_datetime"
+                      date_stop="end_datetime"
+                      color="user_id">
+                <field name="name"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_form_room_booking" model="ir.ui.view">
+        <field name="name">room.booking.form</field>
+        <field name="model">room.booking</field>
+        <field name="arch" type="xml">
+            <form string="Room Booking" version="7.0">
+                <header>
+                    <field name="state" readonly="1" />
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name" placeholder="أدخل اسم الحجز" required="1"/>
+                            <field name="room" placeholder="اختر الغرفة" required="1"/>
+                        </group>
+                        <group>
+                            <field name="start_datetime" placeholder="تاريخ البدء" required="1"/>
+                            <field name="end_datetime" placeholder="تاريخ الانتهاء" required="1"/>
+                        </group>
+                        <group>
+                            <field name="user_id" placeholder="اختر المستخدم" required="1"/>
+                            <field name="description" placeholder="وصف الحجز" />
+                        </group>
+                    </group>
+                </sheet>
+                <footer>
+                </footer>
+            </form>
+        </field>
+    </record>    
+</odoo>
