@@ -1,39 +1,20 @@
 {
-    'name': 'حجز قاعة الاجتماعات',
+    'name': 'حجز قاعات الاجتماعات',
     'version': '1.0',
-    'category': 'Tools',
-    'summary': 'Room Booking with Calendar View',
-    'description': """
-هذا الموديول يتيح للمستخدمين حجز قاعات الاجتماعات مع عرض تقويمي.
-
-الخصائص:
----------
-- اختيار الغرفة حسب الوقت المتاح.
-- منع التعارض بين الحجوزات.
-- دعم التكامل مع تقويم Odoo.
-- إشعارات تلقائية عند إنشاء أو تعديل الحجوزات.
-
-طريقة الاستخدام:
-------------------
-1. انتقل إلى قائمة "قاعة الاجتماعات".
-2. اضغط على "إنشاء" لحجز جديد.
-3. اختر الغرفة، التاريخ، والمدة الزمنية.
-4. سيتم التحقق من التوفر ومنع الحجز المكرر.
-
-المتطلبات:
-------------
-- base
-- web
-
-""",
-    'author': 'عمر العديني / اسم المؤلف',
-    'website': 'http://example.com',
+    'category': 'Productivity',
+    'summary': 'واجهة حجز قاعات بشكل جدول أيام وأوقات',
     'depends': ['base', 'web'],
     'data': [
-         'views/room_booking_views.xml',
-         'views/room_booking_menu.xml',
-         'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
+        'views/room_booking_views.xml',
+        'views/room_booking_calendar.xml',  # أضف هذا إذا كان لديك 
     ],
+    'assets': {
+        'web.assets_backend': [
+            'room_booking_calendar2/static/src/js/room_booking_calendar_view.js',
+            'room_booking_calendar2/static/src/xml/room_booking_calendar_view.xml',
+        ],
+    },
     'installable': True,
     'application': True,
 }

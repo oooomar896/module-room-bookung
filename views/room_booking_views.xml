@@ -1,46 +1,44 @@
 <odoo>
-    <!-- Calendar View -->
-    <record id="view_calendar_room_booking" model="ir.ui.view">
-        <field name="name">room.booking.calendar</field>
+    <!-- عرض قائمة الحجوزات (list) -->
+    <record id="view_room_booking_list" model="ir.ui.view">
+        <field name="name">room.booking.list</field>
         <field name="model">room.booking</field>
         <field name="arch" type="xml">
-            <calendar string="Room Booking Calendar"
-                      date_start="start_datetime"
-                      date_stop="end_datetime"
-                      color="user_id">
-                <field name="name"/>
-            </calendar>
+            <list>
+                <field name="reserver_name"/>
+                <field name="department"/>
+                <field name="email"/>
+                <field name="day"/>
+                <field name="hour"/>
+            </list>
         </field>
     </record>
 
-    <!-- Form View -->
-    <record id="view_form_room_booking" model="ir.ui.view">
+    <!-- عرض نموذج الحجز (form) -->
+    <record id="view_room_booking_form" model="ir.ui.view">
         <field name="name">room.booking.form</field>
         <field name="model">room.booking</field>
         <field name="arch" type="xml">
-            <form string="Room Booking" version="7.0">
-                <header>
-                    <field name="state" readonly="1" />
-                </header>
-                <sheet>
-                    <group>
-                        <group>
-                            <field name="name" placeholder="أدخل اسم الحجز" required="1"/>
-                            <field name="room" placeholder="اختر الغرفة" required="1"/>
-                        </group>
-                        <group>
-                            <field name="start_datetime" placeholder="تاريخ البدء" required="1"/>
-                            <field name="end_datetime" placeholder="تاريخ الانتهاء" required="1"/>
-                        </group>
-                        <group>
-                            <field name="user_id" placeholder="اختر المستخدم" required="1"/>
-                            <field name="description" placeholder="وصف الحجز" />
-                        </group>
-                    </group>
-                </sheet>
-                <footer>
-                </footer>
+            <form>
+                <group>
+                    <field name="reserver_name"/>
+                    <field name="department"/>
+                    <field name="email"/>
+                    <field name="day"/>
+                    <field name="hour"/>
+                </group>
             </form>
         </field>
-    </record>    
+    </record>
+
+    <!-- أكشن القائمة -->
+    <record id="action_room_booking" model="ir.actions.act_window">
+        <field name="name">حجوزات القاعات</field>
+        <field name="res_model">room.booking</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- القوائم -->
+    <menuitem id="menu_room_root" name="إدارة القاعات"/>
+    <menuitem id="menu_room_booking" name="حجوزات القاعات" parent="menu_room_root" action="action_room_booking"/>
 </odoo>

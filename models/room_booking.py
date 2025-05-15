@@ -1,30 +1,20 @@
-
-from odoo import models, fields
+from odoo import models, fields, api
 
 class RoomBooking(models.Model):
     _name = 'room.booking'
-    _description = 'حجز قاعة الاجتماعات'
+    _description = 'حجز قاعة'
 
-    name = fields.Char(string="Subject", required=True)
-    start_datetime = fields.Datetime(string='Start Time', required=True, index=True)
-    end_datetime = fields.Datetime(string='End Time', required=True, index=True)
-    room = fields.Char(string='Room')
-    user_id = fields.Many2one(
-        'res.users', 
-        string='Booked By', 
-        default=lambda self: self.env.user,
-        readonly=True
-    )
-    description = fields.Text(string="Description")  # حقل الوصف الجديد
-
-    state = fields.Selection(
-        [
-            ('draft', 'Draft'),
-            ('confirmed', 'Confirmed'),
-            ('done', 'Done'),
-            ('cancelled', 'Cancelled'),
-        ],
-        string='Status',
-        default='draft',
-        readonly=True
-    )
+    reserver_name = fields.Char(string="اسم الحاجز", required=True)
+    department = fields.Char(string="القسم")
+    email = fields.Char(string="البريد الإلكتروني")
+    day = fields.Selection([
+        ('sunday', 'الأحد'),
+        ('monday', 'الإثنين'),
+        ('tuesday', 'الثلاثاء'),
+        ('wednesday', 'الأربعاء'),
+        ('thursday', 'الخميس'),
+        ('friday', 'الجمعة'),
+        ('saturday', 'السبت'),
+    ], string="اليوم", required=True)
+    hour = fields.Char(string="الوقت", required=True)
+    booking_date = fields.Datetime(string="تاريخ الحجز", default=fields.Datetime.now)
