@@ -3,10 +3,11 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 
 // دالة مساعدة لحساب بداية الأسبوع الحالي (من اليوم)
-function getWeekStart() {
+function getWeekStart(offset) {
     const now = new Date();
     now.setHours(0, 0, 0, 0);
-    return new Date(now.getTime() - 6 * 24 * 60 * 60 * 1000); // قبل 6 أيام = أسبوع
+    const startOfWeek = new Date(now.getTime() + offset * 7 * 24 * 60 * 60 * 1000); // Adjust for the offset
+    return new Date(startOfWeek.getTime() - startOfWeek.getDay() * 24 * 60 * 60 * 1000); // Get the start of the week
 }
 
 export class RoomBookingCalendarView extends Component {
@@ -18,8 +19,10 @@ export class RoomBookingCalendarView extends Component {
             reserver_name: "",
             department: "",
             email: "",
+            guests: [], // New state for guests
             isSubmitting: false,
             bookings: [], // الحجوزات للأسبوع الحالي
+            currentWeekOffset: 0, // New state for week offset
         });
         this.days = [
             { key: 'sunday', label: 'الأحد' },
@@ -30,7 +33,7 @@ export class RoomBookingCalendarView extends Component {
             { key: 'friday', label: 'الجمعة' },
             { key: 'saturday', label: 'السبت' },
         ];
-        this.hours = ['09:00', '10:00', '11:00', '12:00', '01:00', '02:00'];
+        this.hours = ['08:00','09:00', '10:00', '11:00', '12:00', '01:00', '02:00', '03:00', '04:00', '05:00'];
 
         onWillStart(async () => {
             await this.loadBookings();
@@ -39,10 +42,16 @@ export class RoomBookingCalendarView extends Component {
 
     // تحميل الحجوزات للأسبوع الحالي فقط
     async loadBookings() {
-        const weekStart = getWeekStart();
+        const weekStart = getWeekStart(this.state.currentWeekOffset);
+        const numberOfWeeks = 2; // Change this to the number of weeks you want to allow
+        const weekEnd = new Date(weekStart.getTime() + numberOfWeeks * 7 * 24 * 60 * 60 * 1000); // Calculate end date
+
         const weekStartStr = weekStart.toISOString().slice(0, 19).replace('T', ' ');
+        const weekEndStr = weekEnd.toISOString().slice(0, 19).replace('T', ' ');
+
         this.state.bookings = await this.orm.searchRead("room.booking", [
-            ["booking_date", ">=", weekStartStr]
+            ["booking_date", ">=", weekStartStr],
+            ["booking_date", "<=", weekEndStr]
         ], ["day", "hour", "reserver_name"]);
     }
 
@@ -79,27 +88,48 @@ export class RoomBookingCalendarView extends Component {
 
     async submitBooking(ev) {
         ev.preventDefault();
-        if (!this.state.reserver_name || !this.state.email) {
-            this.notification.add("يرجى تعبئة الاسم والبريد الإلكتروني.", { type: "danger" });
+        if (!this.state.reserver_name) {
+            this.notification.add("يرجى تعبئة الاسم.", { type: "danger" });
             return;
         }
-        this.state.isSubmitting = true;
+        this.state.isSubmitting = true; // Show loading state
         try {
-            await this.orm.create("room.booking", [{
+            const bookingData = {
                 reserver_name: this.state.reserver_name,
-                department: this.state.department,
-                email: this.state.email,
+                guests: this.state.guests,
                 day: this.state.selectedSlot.dayKey,
                 hour: this.state.selectedSlot.hour,
-            }]);
+            };
+            await this.orm.create("room.booking", [bookingData]);
             this.notification.add("تم حفظ الحجز بنجاح!", { type: "success" });
             this.state.selectedSlot = null;
-            await this.loadBookings(); // تحديث الجدول
+            this.state.guests = [];
+            await this.loadBookings();
         } catch (error) {
-            this.notification.add("حدث خطأ أثناء حفظ الحجز!", { type: "danger" });
+            // Improved error handling
+            const errorMessage = error.message || "حدث خطأ أثناء حفظ الحجز!";
+            this.notification.add(errorMessage, { type: "danger" });
         } finally {
-            this.state.isSubmitting = false;
+            this.state.isSubmitting = false; // Hide loading state
         }
+    }
+
+    // Method to handle guest input
+    onGuestInput(ev) {
+        this.state.guests = ev.target.value.split(',').map(guest => guest.trim()); // Split input by commas
+    }
+
+    previousWeek() {
+        console.log("Navigating to previous week");
+        this.state.currentWeekOffset -= 1; // Decrease the offset
+        this.loadBookings(); // Reload bookings for the new week
+    }
+
+    nextWeek() {
+        console.log("Navigating to next week");
+        this.state.currentWeekOffset += 1; // Increase the offset for the next week
+        console.log("Current week offset:", this.state.currentWeekOffset);
+        this.loadBookings(); // Reload bookings for the new week
     }
 }
 

@@ -102,3 +102,12 @@ body, .o_form_view {
     visibility: visible;
     opacity: 1;
 }
+
+.button {
+    padding: 10px;
+    background: #1976d2;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

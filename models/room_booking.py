@@ -5,8 +5,7 @@ class RoomBooking(models.Model):
     _description = 'حجز قاعة'
 
     reserver_name = fields.Char(string="اسم الحاجز", required=True)
-    department = fields.Char(string="القسم")
-    email = fields.Char(string="البريد الإلكتروني")
+    guests = fields.Many2many('res.partner', string="المدعوين")
     day = fields.Selection([
         ('sunday', 'الأحد'),
         ('monday', 'الإثنين'),

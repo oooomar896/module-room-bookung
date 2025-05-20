@@ -6,8 +6,6 @@
         <field name="arch" type="xml">
             <list>
                 <field name="reserver_name"/>
-                <field name="department"/>
-                <field name="email"/>
                 <field name="day"/>
                 <field name="hour"/>
             </list>
@@ -22,8 +20,7 @@
             <form>
                 <group>
                     <field name="reserver_name"/>
-                    <field name="department"/>
-                    <field name="email"/>
+                    <field name="guests" widget="many2many_tags"/>
                     <field name="day"/>
                     <field name="hour"/>
                 </group>

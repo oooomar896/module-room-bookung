@@ -1,36 +1,40 @@
 <t t-name="room_booking.RoomBookingCalendarView">
     <div style="display: flex; gap: 32px; align-items: flex-start; margin: 32px 0;">
-        <!-- جدول الأيام والأوقات -->
+        <!-- Week Navigation -->
+        <div style="flex: 1; display: flex; justify-content: space-between; margin-bottom: 20px;">
+            <button type="button" t-on-click="this.previousWeek" style="padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 5px;">
+                الأسبوع السابق
+            </button>
+            <button type="button" t-on-click="this.nextWeek" style="padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 5px;">
+                الأسبوع التالي
+            </button>
+        </div>
+        <!-- Booking Table -->
         <div style="flex: 2; overflow-x: auto;">
             <table style="border-collapse: separate; border-spacing: 0; width: 100%; background: #fff; box-shadow: 0 2px 8px #0001; border-radius: 12px; overflow: hidden;">
                 <thead style="background: #f6f8fa;">
                     <tr>
                         <th style="padding: 14px 8px; background: #f1f3f7; font-weight: bold; color: #333; text-align: center; min-width: 90px; border-bottom: 1px solid #e0e0e0;">الوقت \ اليوم</th>
                         <t t-foreach="days" t-as="day" t-key="day.key">
-                            <th style="padding: 14px 8px; color: #1976d2; font-weight: bold; text-align: center; border-bottom: 1px solid #e0e0e0;"><t t-esc="day.label"/></th>
+                            <th style="padding: 14px 8px; color: #1976d2; font-weight: bold; text-align: center; border-bottom: 1px solid #e0e0e0;">
+                                <t t-esc="day.label"/>
+                            </th>
                         </t>
                     </tr>
                 </thead>
                 <tbody>
                     <t t-foreach="hours" t-as="hour" t-key="hour">
                         <tr>
-                            <td style="padding: 10px 8px; font-weight: bold; background: #f9f9fb; color: #1976d2; border-bottom: 1px solid #f0f0f0; text-align: center;"><t t-esc="hour"/></td>
+                            <td style="padding: 10px 8px; font-weight: bold; background: #f9f9fb; color: #1976d2; border-bottom: 1px solid #f0f0f0; text-align: center;">
+                                <t t-esc="hour"/>
+                            </td>
                             <t t-foreach="days" t-as="day" t-key="day.key">
                                 <td style="text-align: center; padding: 8px; border-bottom: 1px solid #f0f0f0;">
                                     <t t-if="this.isSlotBooked(day.key, hour)">
                                         <button type="button"
                                             disabled="1"
                                             t-att-title="'محجوز بواسطة: ' + this.getSlotReserver(day.key, hour)"
-                                            style="
-                                                padding: 6px 18px;
-                                                border-radius: 6px;
-                                                border: none;
-                                                background: #e57373;
-                                                color: #fff;
-                                                font-weight: 600;
-                                                cursor: not-allowed;
-                                                box-shadow: 0 1px 3px #0001;
-                                            ">
+                                            style="padding: 6px 18px; border-radius: 6px; border: none; background: #e57373; color: #fff; font-weight: 600; cursor: not-allowed; box-shadow: 0 1px 3px #0001;">
                                             <i class="fa fa-lock" style="margin-left: 5px;"></i>
                                             محجوز
                                         </button>
@@ -38,20 +42,7 @@
                                     <t t-else="">
                                         <button type="button"
                                             t-on-click="() => this.selectSlot(day.key, hour)"
-                                            style="
-                                                padding: 6px 18px;
-                                                border-radius: 6px;
-                                                border: none;
-                                                background: #e3f2fd;
-                                                color: #1976d2;
-                                                font-weight: 600;
-                                                cursor: pointer;
-                                                transition: background 0.2s, color 0.2s;
-                                                box-shadow: 0 1px 3px #0001;
-                                            "
-                                            onmouseover="this.style.background='#1976d2';this.style.color='#fff';"
-                                            onmouseout="this.style.background='#e3f2fd';this.style.color='#1976d2';"
-                                        >
+                                            style="padding: 6px 18px; border-radius: 6px; border: none; background: #e3f2fd; color: #1976d2; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; box-shadow: 0 1px 3px #0001;">
                                             <i class="fa fa-calendar-plus-o" style="margin-left: 5px;"></i>
                                             حجز
                                         </button>
@@ -81,14 +72,9 @@
                             style="width: 100%; padding: 8px; border: 1px solid #bdbdbd; border-radius: 5px; background: #fff;"/>
                     </div>
                     <div style="margin-bottom: 14px;">
-                        <label style="font-weight: 500; color: #333;">القسم</label><br/>
-                        <input type="text" name="department" t-model="state.department" t-on-input="(ev) => this.onInput(ev, 'department')"
-                            style="width: 100%; padding: 8px; border: 1px solid #bdbdbd; border-radius: 5px; background: #fff;"/>
-                    </div>
-                    <div style="margin-bottom: 18px;">
-                        <label style="font-weight: 500; color: #333;">البريد الإلكتروني <span style="color: #d32f2f;">*</span></label><br/>
-                        <input type="email" name="email" t-model="state.email" t-on-input="(ev) => this.onInput(ev, 'email')"
-                            style="width: 100%; padding: 8px; border: 1px solid #bdbdbd; border-radius: 5px; background: #fff;"/>
+                        <label style="font-weight: 500; color: #333;">المدعوين</label><br/>
+                        <field name="guests" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
+                        <small style="color: #888;">اختر المدعوين من القائمة</small>
                     </div>
                     <button type="submit"
                             t-att-disabled="state.isSubmitting"
@@ -124,4 +110,10 @@
             </t>
         </div>
     </div>
+    <t t-if="state.bookings.length === 0">
+        <div style="display: flex; flex-direction: column; align-items: center; color: #aaa; margin-top: 60px;">
+            <i class="fa fa-calendar-o" style="font-size: 60px; margin-bottom: 18px;"></i>
+            <p style="font-size: 17px;">لا توجد حجوزات في هذا الأسبوع</p>
+        </div>
+    </t>
 </t>
