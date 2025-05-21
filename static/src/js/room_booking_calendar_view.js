@@ -22,7 +22,6 @@ export class RoomBookingCalendarView extends Component {
             guests: [], // New state for guests
             isSubmitting: false,
             bookings: [], // الحجوزات للأسبوع الحالي
-            currentWeekOffset: 0, // New state for week offset
         });
         this.days = [
             { key: 'sunday', label: 'الأحد' },
@@ -42,7 +41,7 @@ export class RoomBookingCalendarView extends Component {
 
     // تحميل الحجوزات للأسبوع الحالي فقط
     async loadBookings() {
-        const weekStart = getWeekStart(this.state.currentWeekOffset);
+        const weekStart = getWeekStart(0); // Always get the current week
         const numberOfWeeks = 2; // Change this to the number of weeks you want to allow
         const weekEnd = new Date(weekStart.getTime() + numberOfWeeks * 7 * 24 * 60 * 60 * 1000); // Calculate end date
 
@@ -117,19 +116,6 @@ export class RoomBookingCalendarView extends Component {
     // Method to handle guest input
     onGuestInput(ev) {
         this.state.guests = ev.target.value.split(',').map(guest => guest.trim()); // Split input by commas
-    }
-
-    previousWeek() {
-        console.log("Navigating to previous week");
-        this.state.currentWeekOffset -= 1; // Decrease the offset
-        this.loadBookings(); // Reload bookings for the new week
-    }
-
-    nextWeek() {
-        console.log("Navigating to next week");
-        this.state.currentWeekOffset += 1; // Increase the offset for the next week
-        console.log("Current week offset:", this.state.currentWeekOffset);
-        this.loadBookings(); // Reload bookings for the new week
     }
 }
 

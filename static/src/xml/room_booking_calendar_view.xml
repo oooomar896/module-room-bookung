@@ -1,22 +1,13 @@
 <t t-name="room_booking.RoomBookingCalendarView">
-    <div style="display: flex; gap: 32px; align-items: flex-start; margin: 32px 0;">
-        <!-- Week Navigation -->
-        <div style="flex: 1; display: flex; justify-content: space-between; margin-bottom: 20px;">
-            <button type="button" t-on-click="this.previousWeek" style="padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 5px;">
-                الأسبوع السابق
-            </button>
-            <button type="button" t-on-click="this.nextWeek" style="padding: 10px; background: #1976d2; color: #fff; border: none; border-radius: 5px;">
-                الأسبوع التالي
-            </button>
-        </div>
+    <div style="display: flex; gap: 32px; align-items: flex-start; margin: 32px 0; font-family: 'Arial', sans-serif;">
         <!-- Booking Table -->
         <div style="flex: 2; overflow-x: auto;">
-            <table style="border-collapse: separate; border-spacing: 0; width: 100%; background: #fff; box-shadow: 0 2px 8px #0001; border-radius: 12px; overflow: hidden;">
-                <thead style="background: #f6f8fa;">
+            <table style="border-collapse: separate; border-spacing: 0; width: 100%; background: #fff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border-radius: 12px; overflow: hidden;">
+                <thead style="background: #eef2f7;">
                     <tr>
-                        <th style="padding: 14px 8px; background: #f1f3f7; font-weight: bold; color: #333; text-align: center; min-width: 90px; border-bottom: 1px solid #e0e0e0;">الوقت \ اليوم</th>
+                        <th style="padding: 16px 12px; background: #e9ecf0; font-weight: 600; color: #333; text-align: center; min-width: 100px; border-bottom: 1px solid #d8dde3;">الوقت \\ اليوم</th>
                         <t t-foreach="days" t-as="day" t-key="day.key">
-                            <th style="padding: 14px 8px; color: #1976d2; font-weight: bold; text-align: center; border-bottom: 1px solid #e0e0e0;">
+                            <th style="padding: 16px 12px; color: #007bff; font-weight: 600; text-align: center; border-bottom: 1px solid #d8dde3;">
                                 <t t-esc="day.label"/>
                             </th>
                         </t>
@@ -25,25 +16,27 @@
                 <tbody>
                     <t t-foreach="hours" t-as="hour" t-key="hour">
                         <tr>
-                            <td style="padding: 10px 8px; font-weight: bold; background: #f9f9fb; color: #1976d2; border-bottom: 1px solid #f0f0f0; text-align: center;">
+                            <td style="padding: 12px 10px; font-weight: 500; background: #f8f9fa; color: #007bff; border-bottom: 1px solid #e9ecef; text-align: center; border-right: 1px solid #e9ecef;">
                                 <t t-esc="hour"/>
                             </td>
                             <t t-foreach="days" t-as="day" t-key="day.key">
-                                <td style="text-align: center; padding: 8px; border-bottom: 1px solid #f0f0f0;">
+                                <td style="text-align: center; padding: 10px; border-bottom: 1px solid #e9ecef; border-right: 1px solid #e9ecef;">
                                     <t t-if="this.isSlotBooked(day.key, hour)">
                                         <button type="button"
                                             disabled="1"
                                             t-att-title="'محجوز بواسطة: ' + this.getSlotReserver(day.key, hour)"
-                                            style="padding: 6px 18px; border-radius: 6px; border: none; background: #e57373; color: #fff; font-weight: 600; cursor: not-allowed; box-shadow: 0 1px 3px #0001;">
-                                            <i class="fa fa-lock" style="margin-left: 5px;"></i>
+                                            style="padding: 8px 16px; border-radius: 8px; border: none; background: #ff7675; color: #fff; font-weight: 500; cursor: not-allowed; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                            <i class="fa fa-lock" style="margin-right: 6px;"></i>
                                             محجوز
                                         </button>
                                     </t>
                                     <t t-else="">
                                         <button type="button"
                                             t-on-click="() => this.selectSlot(day.key, hour)"
-                                            style="padding: 6px 18px; border-radius: 6px; border: none; background: #e3f2fd; color: #1976d2; font-weight: 600; cursor: pointer; transition: background 0.2s, color 0.2s; box-shadow: 0 1px 3px #0001;">
-                                            <i class="fa fa-calendar-plus-o" style="margin-left: 5px;"></i>
+                                            style="padding: 8px 16px; border-radius: 8px; border: 1px solid #007bff; background: #e7f3ff; color: #007bff; font-weight: 500; cursor: pointer; transition: background 0.2s, color 0.2s, box-shadow 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);"
+                                            onmouseover="this.style.background='#007bff'; this.style.color='#fff'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)';"
+                                            onmouseout="this.style.background='#e7f3ff'; this.style.color='#007bff'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.05)';">
+                                            <i class="fa fa-calendar-plus-o" style="margin-right: 6px;"></i>
                                             حجز
                                         </button>
                                     </t>
@@ -55,65 +48,66 @@
             </table>
         </div>
         <!-- نموذج الحجز الجانبي -->
-        <div style="flex: 1; border: 1px solid #e0e0e0; padding: 28px 22px; border-radius: 16px; background: #f8fafb; box-shadow: 0 2px 8px #0001; min-width: 320px;">
+        <div style="flex: 1; border: 1px solid #d8dde3; padding: 32px 24px; border-radius: 16px; background: #fdfdff; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-width: 340px;">
             <t t-if="state.selectedSlot">
-                <div style="margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 22px; color: #1976d2;">
+                <div style="margin-bottom: 24px; display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid #e9ecef;">
+                    <span style="font-size: 26px; color: #007bff;">
                         <i class="fa fa-calendar-check-o"></i>
                     </span>
-                    <h3 style="margin: 0; font-size: 20px; color: #1976d2;">
+                    <h3 style="margin: 0; font-size: 22px; color: #007bff; font-weight: 600;">
                         حجز يوم <t t-esc="days.find(d => d.key === state.selectedSlot.dayKey).label"/> الساعة <t t-esc="state.selectedSlot.hour"/>
                     </h3>
                 </div>
                 <form t-on-submit.prevent="this.submitBooking" autocomplete="off">
-                    <div style="margin-bottom: 14px;">
-                        <label style="font-weight: 500; color: #333;">الاسم <span style="color: #d32f2f;">*</span></label><br/>
+                    <div style="margin-bottom: 18px;">
+                        <label style="font-weight: 500; color: #333; display: block; margin-bottom: 6px;">الاسم <span style="color: #d32f2f;">*</span></label>
                         <input type="text" name="reserver_name" t-model="state.reserver_name" t-on-input="(ev) => this.onInput(ev, 'reserver_name')"
-                            style="width: 100%; padding: 8px; border: 1px solid #bdbdbd; border-radius: 5px; background: #fff;"/>
+                            style="width: 100%; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 6px; background: #fff; box-sizing: border-box; transition: border-color 0.2s;"/>
                     </div>
-                    <div style="margin-bottom: 14px;">
-                        <label style="font-weight: 500; color: #333;">المدعوين</label><br/>
+                    <div style="margin-bottom: 24px;">
+                        <label style="font-weight: 500; color: #333; display: block; margin-bottom: 6px;">المدعوين</label>
                         <field name="guests" widget="many2many_tags" options="{'no_create': True, 'no_open': True}"/>
-                        <small style="color: #888;">اختر المدعوين من القائمة</small>
+                        <small style="color: #777; font-size: 0.85em; margin-top: 4px; display: block;">اختر المدعوين من قائمة الحجوزات</small>
                     </div>
                     <button type="submit"
                             t-att-disabled="state.isSubmitting"
                             style="
                                 width: 100%;
-                                padding: 10px 0;
-                                background: #1976d2;
+                                padding: 12px 0;
+                                background: #007bff;
                                 color: #fff;
                                 border: none;
-                                border-radius: 6px;
+                                border-radius: 8px;
                                 font-size: 16px;
-                                font-weight: bold;
+                                font-weight: 600;
                                 cursor: pointer;
-                                transition: background 0.2s;
+                                transition: background 0.2s, box-shadow 0.2s;
+                                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
                             "
-                            onmouseover="this.style.background='#1565c0';"
-                            onmouseout="this.style.background='#1976d2';"
+                            onmouseover="this.style.background='#0056b3'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)';"
+                            onmouseout="this.style.background='#007bff'; this.style.boxShadow='0 2px 4px rgba(0,0,0,0.1)';"
                     >
                         <t t-if="state.isSubmitting">
-                            <i class="fa fa-spinner fa-spin"></i> جاري الحفظ...
+                            <i class="fa fa-spinner fa-spin" style="margin-right: 8px;"></i> جاري الحفظ...
                         </t>
                         <t t-else="">
-                            <i class="fa fa-check"></i> تأكيد الحجز
+                            <i class="fa fa-check" style="margin-right: 8px;"></i> تأكيد الحجز
                         </t>
                     </button>
                 </form>
             </t>
             <t t-else="">
-                <div style="display: flex; flex-direction: column; align-items: center; color: #aaa; margin-top: 60px;">
-                    <i class="fa fa-calendar-o" style="font-size: 60px; margin-bottom: 18px;"></i>
-                    <p style="font-size: 17px;">اختر توقيتًا للحجز من الجدول</p>
+                <div style="display: flex; flex-direction: column; align-items: center; color: #adb5bd; margin-top: 80px; text-align: center;">
+                    <i class="fa fa-calendar-o" style="font-size: 64px; margin-bottom: 24px;"></i>
+                    <p style="font-size: 18px; font-weight: 500;">اختر توقيتًا للحجز من الجدول</p>
                 </div>
             </t>
         </div>
     </div>
     <t t-if="state.bookings.length === 0">
-        <div style="display: flex; flex-direction: column; align-items: center; color: #aaa; margin-top: 60px;">
-            <i class="fa fa-calendar-o" style="font-size: 60px; margin-bottom: 18px;"></i>
-            <p style="font-size: 17px;">لا توجد حجوزات في هذا الأسبوع</p>
+        <div style="display: flex; flex-direction: column; align-items: center; color: #adb5bd; margin-top: 80px; text-align: center;">
+            <i class="fa fa-calendar-o" style="font-size: 64px; margin-bottom: 24px;"></i>
+            <p style="font-size: 18px; font-weight: 500;">لا توجد حجوزات في هذا الأسبوع</p>
         </div>
     </t>
 </t>
